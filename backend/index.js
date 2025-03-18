@@ -17,6 +17,10 @@ app.use(requestsLogger);
 import productRoutes from './routes/product.routes.js'
 app.use('/api/products', productRoutes)
 
+//Authentication
+import { userRoutes } from './routes/user.auth.js';
+app.use('/api/user', userRoutes);
+
 // Check for  Environments
 if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, '/frontend/dist')));
