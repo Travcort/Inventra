@@ -7,5 +7,6 @@ if (!MONGO_LOCAL || !MONGO_PROD || !NODE_ENV || !PORT || !JWT_SECRET) {
     process.exit(1);
 }
 
+export const jwtSecret = JWT_SECRET;
 export const serverPort = PORT;
 export const MongoUrl = NODE_ENV === 'development' ? MONGO_LOCAL : MONGO_PROD;

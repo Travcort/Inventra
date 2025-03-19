@@ -1,7 +1,7 @@
 {
-  "name": "products-store",
+  "name": "inventra",
   "version": "1.0.0",
-  "description": "A Full-Stack Mern App that is a Products Store",
+  "description": "A Full-Stack Inventory Dashboard Web App",
   "main": "index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon backend/index.js",
