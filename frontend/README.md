@@ -1,9 +1,9 @@
-### Products Store Frontend                                 
+# Inventra Frontend                                 
 
-Developed using React + Vite
+Developed using React + Vite + Zustand
 
 Using Chakra UI Components
 
 ```ps: I'm not a Designer👀😂```
 
-© 2024 Tirva Softwares. All rights reserved.
+```© 2025 Tirva Softwares. All rights reserved.```

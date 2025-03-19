@@ -14,18 +14,26 @@ export const fetchAllProducts = async (req,res) => {
     }
 };
 
-export const fetchParticularProduct = (req,res) => {
+export const updateStock = async (req,res) => {
     const id = req.params.id;
+    const { stock } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
         res.status(404).json({ success: false, message: "Invalid Product ID" });
     }
 
-    Product.findById(id)
-    .then((result) => {
-        res.json(result);
-    })
-    .catch((error) => res.status(500).json({ success: false, message: "Internal Server Error" }));
+    try {
+        const productToUpdate = await Product.findById(id);
+        if(!productToUpdate) return res.status(404).json({ success: false, message: 'Product does not exist' });
+
+        productToUpdate.stock = stock;
+
+        const updatedProduct = await productToUpdate.save();
+        return res.status(200).json({ success: true, message: 'The Stock count has been updated', products: updatedProduct  });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
 }
 
 export const createProduct = async (req,res) => {

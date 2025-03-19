@@ -1,18 +1,24 @@
-import { Button, Container, Flex, HStack, Text, useColorMode } from '@chakra-ui/react';
+import { Container, Button, Flex, HStack, Text, useColorMode, Avatar, Icon } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
-import { IoSunny } from "react-icons/io5";
-import { FaMoon } from "react-icons/fa";
 import { AmazoniaDrawer } from './Drawer';
 import { Theme } from '../store/colors';
+import { useAuthStore } from '../store/authStore';
+import { MdInventory } from "react-icons/md";   
 
 export const Navbar = () => {
-    const { colorMode, toggleColorMode } = useColorMode();
+    const { colorMode } = useColorMode();
+    const user = useAuthStore((state) => state.user);
     return (
         <Container
             maxW={"1140px"}
-            px={4} 
+            px={4}
             bgColor={Theme[colorMode].inverseBackground}
             borderRadius={"10px"}
+            position={{
+                base: 'fixed',
+                md: 'sticky'
+            }}
+            zIndex={1000}
         >
             <Flex
                 h={16}
@@ -23,16 +29,25 @@ export const Navbar = () => {
                 <Text
                     bgColor={"yellow.500"}
                     bgClip='text'
-                    fontSize='3xl'
+                    fontSize={{
+                        base: '2xl',
+                        md: '3xl'
+                    }}
                     fontWeight='extrabold'
                 >
-                    <Link to={"/"}>Amazonia 🛒</Link>
+                    <Link to={"/"}>Inventra
+                        <Icon as={MdInventory} marginY={'auto'} color={'yellow.500'} ml={2} />
+                    </Link>
                 </Text>
 
                 <HStack spacing={2} alignItems={"center"}>
-                    <Button colorScheme={Theme[colorMode].buttonBackground} onClick={toggleColorMode}>
-                        {colorMode === 'light' ? <FaMoon /> : <IoSunny />}
-                    </Button>
+                    { user
+                    ? (<Avatar bg={Theme[colorMode].buttonBackground} color={Theme[colorMode].white} size={'sm'} name={user?.username} />) 
+                    : (
+                        <Link to="/login">
+                            <Button bg={Theme[colorMode].buttonBackground} color={Theme[colorMode].white}>Login</Button>
+                        </Link>
+                    )}
 
                     <AmazoniaDrawer />
                 </HStack>

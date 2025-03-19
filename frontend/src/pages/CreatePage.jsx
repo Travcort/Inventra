@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Container, Heading, VStack, Box, useColorModeValue, Button, useToast } from "@chakra-ui/react";
-import { useProductStore } from "../store/product"
+import { useProductStore } from "../store/productStore"
 import { Theme } from "../store/colors";
 import { ProductForm } from "../components/ProductForm";
 
@@ -38,7 +38,7 @@ const CreatePage = () => {
     }
 
     return <Container maxW={"container.sm"}>
-        <VStack spacing={8}>
+        <VStack mt={5} spacing={8}>
             <Heading as={"h1"} size={"2xl"} textAlign={"center"}>Create a New Product</Heading>
 
             <Box w={"full"} bg={useColorModeValue(Theme.backgroundColor)}>
