@@ -1,5 +1,5 @@
 import { Spinner, Container, VStack, Text, SimpleGrid } from '@chakra-ui/react';
-import { useProductStore } from '../store/product';
+import { useProductStore } from '../store/productStore';
 import { useEffect } from 'react';
 import { ProductsSection } from '../components/ProductsSection';
 
@@ -14,7 +14,7 @@ const HomePage = () => {
 
     return (
         <Container maxW={'container.xl'} py={12}>
-            <VStack spacing={8}>
+            <VStack mt={5} spacing={8}>
 
                 <Text textAlign={'center'} fontSize={"30"} fontWeight={"bold"}>
                     Current Products

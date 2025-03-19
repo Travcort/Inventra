@@ -1,12 +1,22 @@
 export const Theme = {
     light: {
-        backgroundColor: 'white',
-        inverseBackground: 'gray.800',
-        buttonBackground: 'red'
+        text: 'black',
+        black: 'black',
+        white: 'white',
+        inverseText: 'white',
+        backgroundColor: 'gray.100',
+        inverseBackground: 'gray.900',
+        buttonBackground: '#1f2937',
+        cardBackground: 'gray.800'
     },
     dark: {
-        backgroundColor: 'gray.800',
-        inverseBackground: 'purple.800',
-        buttonBackground: 'yellow.4'
+        text: 'white',
+        black: 'black',
+        white: 'white',
+        inverseText: 'black',
+        backgroundColor: 'gray.900',
+        inverseBackground: 'gray.200',
+        buttonBackground: 'teal',
+        cardBackground: 'gray.200'
     }
 }
