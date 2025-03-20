@@ -22,6 +22,8 @@ export const updateStock = async (req,res) => {
         res.status(404).json({ success: false, message: "Invalid Product ID" });
     }
 
+    if (!stock || !updatedBy) return res.status(400).json({ success: false, message: 'Undefined fields!' });
+
     try {
         const productToUpdate = await Product.findById(id);
         if(!productToUpdate) return res.status(404).json({ success: false, message: 'Product does not exist' });

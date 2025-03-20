@@ -40,6 +40,7 @@ const ProductCard = ({ product }) => {
     };
 
     const handleUpdateProduct = async (pid, updatedProduct) => {
+        setUpdatedProduct((updatedProduct) => ({...updatedProduct, updatedBy: user?.userId}));
         const { success, message } = await updateProduct(pid, updatedProduct);
         onClose();
         if(!success) {
@@ -61,6 +62,7 @@ const ProductCard = ({ product }) => {
     }
 
     const handleUpdateStock = async (pid, updatedProduct) => {
+        setUpdatedProduct((updatedProduct) => ({...updatedProduct, updatedBy: user?.userId}));
         const { success, message } = await updateStock(pid, updatedProduct);
         onClose();
         if(!success) {

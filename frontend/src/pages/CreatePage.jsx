@@ -3,6 +3,7 @@ import { Container, Heading, VStack, Box, useColorModeValue, Button, useToast } 
 import { useProductStore } from "../store/productStore"
 import { Theme } from "../store/colors";
 import { ProductForm } from "../components/ProductForm";
+import { useAuthStore } from "../store/authStore";
 
 const CreatePage = () => {
     const [ newProduct, setNewProduct ] = useState({
@@ -10,7 +11,8 @@ const CreatePage = () => {
         price: "",
         description: "",
         stock: "",
-        image: ""
+        image: "",
+        createdBy: useAuthStore.getState().user.userId
     });
 
     const createProduct= useProductStore((state) => state.createProduct);

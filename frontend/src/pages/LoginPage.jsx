@@ -32,9 +32,18 @@ export const LoginPage = () => {
                     status: "error",
                     isClosable: true
                 });
+                if(data.message === "Invalid Password!") {
+                    setPassword("");
+                }
+                else {
+                    setEmail("");
+                    setPassword("");
+                }
             }
-            login(data.token, data.user?.username, data.user?.role);
-            navigate('/');
+            else {
+                login(data.token, data.user?.username, data.user?.userId, data.user?.role);
+                navigate('/');
+            }
         } catch (error) {
             console.error(error);
         }
