@@ -16,7 +16,7 @@ export const fetchAllProducts = async (req,res) => {
 
 export const updateStock = async (req,res) => {
     const id = req.params.id;
-    const { stock } = req.body;
+    const { stock, updatedBy } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
         res.status(404).json({ success: false, message: "Invalid Product ID" });
@@ -27,6 +27,7 @@ export const updateStock = async (req,res) => {
         if(!productToUpdate) return res.status(404).json({ success: false, message: 'Product does not exist' });
 
         productToUpdate.stock = stock;
+        productToUpdate.updatedBy = updatedBy;
 
         const updatedProduct = await productToUpdate.save();
         return res.status(200).json({ success: true, message: 'The Stock count has been updated', products: updatedProduct  });
@@ -37,21 +38,15 @@ export const updateStock = async (req,res) => {
 }
 
 export const createProduct = async (req,res) => {
-    const { name, description, price, image, stock } = req.body;
+    const { name, description, price, image, stock, createdBy } = req.body;
 
-    if(!name || !description || !price || !image || !stock) {
+    if(!name || !description || !price || !image || !stock || !createdBy) {
         return res.status(400).json({ success: false, message: 'You have undefined properties in the body!' });
     }
 
     if (isNaN(stock)) return res.status(400).json({ success: false, message: 'Stock field should be a number' });
 
-    const newProduct = new Product({
-        name: name,
-        description: description,
-        price: price,
-        image: image,
-        stock: stock
-    });
+    const newProduct = new Product({ name, description, price, image, stock, createdBy, updatedBy: createdBy });
 
     try {
         const updated = await newProduct.save();
@@ -65,28 +60,25 @@ export const createProduct = async (req,res) => {
 
 export const updateProduct =  async (req,res) => {
     const id = req.params.id;
-    const { name, price, description, image, stock } = req.body;
+    const { name, price, description, image, stock, updatedBy } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(400).json({ success: false, message: "Invalid Product ID!" });
     }
 
-    if(!name || !price || !description || !image || !stock) {
+    if(!name || !price || !description || !image || !stock || !updatedBy) {
         return res.status(400).json({ success: false, message: 'You have undefined properties in the body!' });
     }
 
     if (isNaN(stock)) return res.status(400).json({ success: false, message: 'Stock field should be a number!' });
 
-    const newProduct = {
-        name,
-        price,
-        description,
-        image,
-        stock
-    };
+    let productToUpdate = await Product.findById(id);
+    if(!productToUpdate) return res.status(404).json({ success: false, message: 'Product does not exist' });
+
+    productToUpdate = { name, price, description, image, stock, createdBy: productToUpdate.createdBy, updatedBy };
 
     try {
-        const updated = await Product.findByIdAndUpdate(id, newProduct, { new: true });
+        const updated = await Product.findByIdAndUpdate(id, productToUpdate, { new: true });
         return res.status(200).json({ success: true, message: 'The Product has been updated', products: updated });
     } 
     catch (error) {

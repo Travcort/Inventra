@@ -23,6 +23,16 @@ const productSchema = new mongoose.Schema({
     stock: {
         type: Number,
         required: true
+    },
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    updatedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     }
 },
 {
