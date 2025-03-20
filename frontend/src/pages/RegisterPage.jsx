@@ -1,6 +1,5 @@
-import { useToast, Input, Text, Button, useColorMode, Flex, VStack, Container, FormControl, FormLabel, Select, DrawerHeader } from "@chakra-ui/react";
+import { useToast, Input, Text, Button, useColorMode, Flex, VStack, Container, FormControl, FormLabel, Select } from "@chakra-ui/react";
 import { useState } from "react";
-import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
 import { Theme } from "../store/colors";
 
@@ -9,13 +8,12 @@ export const RegisterPage = () => {
     const [password, setPassword] = useState("");
     const [username, setUsername] = useState("");
     const [role, setRole] = useState("");
-    const login = useAuthStore((state) => state.login);
     const navigate = useNavigate();
     const { colorMode } = useColorMode();
 
     const toast = useToast();
 
-    const handleLogin = async (e) => {
+    const handleSignUp = async (e) => {
         e.preventDefault();
 
         try {
@@ -35,8 +33,7 @@ export const RegisterPage = () => {
                     isClosable: true
                 });
             }
-            login(data.token, data.user?.username, data.user?.role);
-            navigate('/');
+            navigate('/login');
         } catch (error) {
             console.error(error);
         }
@@ -46,7 +43,7 @@ export const RegisterPage = () => {
         <Container maxW={'container.xl'} py={12}>
             <VStack mt={5} spacing={8}>
                 <Text align={'center'} fontSize={20} fontWeight={'extrabold'} paddingY={2}>Sign Up</Text>
-                <form onSubmit={handleLogin}>
+                <form onSubmit={handleSignUp}>
                     <Flex margin={'auto'} w={'100%'} maxW={'sm'} flexDirection={'column'}>
                         <FormControl w={'full'} isRequired>
                             <FormLabel fontWeight="bold">Username</FormLabel>
