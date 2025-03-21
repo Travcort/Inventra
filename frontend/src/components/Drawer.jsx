@@ -13,6 +13,7 @@ export function AmazoniaDrawer() {
     const btnRef = React.useRef();
     const { colorMode, toggleColorMode } = useColorMode();
     const logoutAction = useAuthStore((state) => state.logout);
+    const user = useAuthStore((state) => state.user);
 
     const handleLogout = () => {
       logoutAction();
@@ -39,9 +40,20 @@ export function AmazoniaDrawer() {
                     <Button bg={Theme[colorMode].buttonBackground} color={Theme[colorMode].white} {...buttonProps}>Home</Button>
                 </Link>
 
-                <Link to={'/create'}>
-                    <Button bg={Theme[colorMode].buttonBackground} color={Theme[colorMode].white} {...buttonProps}>Add Product</Button>
-                </Link>
+                {
+                  user?.role === 'admin' &&
+                  (
+                    <>
+                      <Link to={'/admin'}>
+                        <Button bg={Theme[colorMode].buttonBackground} color={Theme[colorMode].white} {...buttonProps}>Admin Panel</Button>
+                      </Link>
+
+                      <Link to={'/create'}>
+                        <Button bg={Theme[colorMode].buttonBackground} color={Theme[colorMode].white} {...buttonProps}>Add Product</Button>
+                      </Link>
+                    </>
+                  )
+                }
 
                 <Link to={'/login'}>
                     <Button bg={Theme[colorMode].buttonBackground} color={Theme[colorMode].white} {...buttonProps}>Login</Button>
