@@ -10,7 +10,8 @@ export const authenticateUser = (req,res,next) => {
         req.user = decoded;
         next();
     } catch (error) {
-        console.error(error);
+        console.error(error.message);
+        if(error.message === 'jwt expired') return res.status(400).json({ success: false, message: 'Access Token is expired! Please log in'})
         return res.status(400).json({ success: false, message: 'Invalid Access Token' });
     }
 }

@@ -39,16 +39,18 @@ const CreatePage = () => {
         setNewProduct({ name: "", price: "", description: "", stock: "", image: "" });
     }
 
-    return <Container maxW={"container.sm"}>
-        <VStack mt={5} spacing={8}>
-            <Heading as={"h1"} size={"2xl"} textAlign={"center"}>Create a New Product</Heading>
+    return (
+        <Container maxW={"container.sm"} py={12}>
+            <VStack mt={5} spacing={8}>
+                <Heading as={"h1"} size={"2xl"} textAlign={"center"}>Create a New Product</Heading>
 
-            <Box w={"full"} bg={useColorModeValue(Theme.backgroundColor)}>
-                <ProductForm newProduct={newProduct} setNewProduct={setNewProduct} />
-                <Button colorScheme={"blue"} w={"full"} onClick={handleAddProduct}>Add Product</Button>
-            </Box>
-        </VStack>
-    </Container>
+                <Box w={"full"} bg={useColorModeValue(Theme.backgroundColor)}>
+                    <ProductForm newProduct={newProduct} setNewProduct={setNewProduct} />
+                    <Button mt={5} colorScheme={"blue"} w={"full"} onClick={handleAddProduct}>Add Product</Button>
+                </Box>
+            </VStack>
+        </Container>
+    );
 };
 
 export default CreatePage;

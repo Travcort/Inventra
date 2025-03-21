@@ -35,6 +35,10 @@ export function AmazoniaDrawer() {
   
             <DrawerBody>
               <Flex flexDirection={'column'} gap={5}>
+                <Link to={'/'}>
+                    <Button bg={Theme[colorMode].buttonBackground} color={Theme[colorMode].white} {...buttonProps}>Home</Button>
+                </Link>
+
                 <Link to={'/create'}>
                     <Button bg={Theme[colorMode].buttonBackground} color={Theme[colorMode].white} {...buttonProps}>Add Product</Button>
                 </Link>

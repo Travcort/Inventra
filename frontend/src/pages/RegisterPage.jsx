@@ -7,7 +7,6 @@ export const RegisterPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [username, setUsername] = useState("");
-    const [role, setRole] = useState("");
     const navigate = useNavigate();
     const { colorMode } = useColorMode();
 
@@ -17,12 +16,12 @@ export const RegisterPage = () => {
         e.preventDefault();
 
         try {
-            const response = await fetch('/api/user/register', {
+            const response = await fetch('/api/users/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ username, email, password, role })
+                body: JSON.stringify({ username, email, password })
             });
             const data = await response.json();
             if (!data.success) {
@@ -32,8 +31,13 @@ export const RegisterPage = () => {
                     status: "error",
                     isClosable: true
                 });
+                setEmail("");
+                setPassword("");
+                setUsername("");
             }
-            navigate('/login');
+            else {
+                navigate('/login');
+            }
         } catch (error) {
             console.error(error);
         }
@@ -44,7 +48,7 @@ export const RegisterPage = () => {
             <VStack mt={5} spacing={8}>
                 <Text align={'center'} fontSize={20} fontWeight={'extrabold'} paddingY={2}>Sign Up</Text>
                 <form onSubmit={handleSignUp}>
-                    <Flex margin={'auto'} w={'100%'} maxW={'sm'} flexDirection={'column'}>
+                    <Flex margin={'auto'} w={'100%'} flexDirection={'column'}>
                         <FormControl w={'full'} isRequired>
                             <FormLabel fontWeight="bold">Username</FormLabel>
                             <Input mb={2} type="text" placeholder="Procrastinator" value={username} onChange={(e) => setUsername(e.target.value)} required />
@@ -57,16 +61,7 @@ export const RegisterPage = () => {
                             <FormLabel fontWeight="bold">Password</FormLabel>
                             <Input mb={2} type="password" placeholder="********" value={password} onChange={(e) => setPassword(e.target.value)} required />
                         </FormControl>
-                        <FormControl w="full" isRequired>
-                            <FormLabel fontWeight="bold">Role</FormLabel>
-                            <Select value={role} onChange={(e) => setRole(e.target.value)}>
-                                <option value="">Select a Role</option>
-                                <option value="admin">Admin</option>
-                                <option value="stockist">Stockist</option>
-                                <option value="user">User</option>
-                            </Select>
-                        </FormControl>
-                        <Button bg={Theme[colorMode].buttonBackground} color={Theme[colorMode].white} type="submit">Sign Up</Button>
+                        <Button mt={5} bg={Theme[colorMode].buttonBackground} color={Theme[colorMode].white} type="submit">Sign Up</Button>
                     </Flex>
                 </form>
             </VStack>

@@ -1,4 +1,4 @@
-import { Input, Text, VStack } from "@chakra-ui/react";
+import { FormControl, FormLabel, Input, VStack } from "@chakra-ui/react";
 
 export const ProductForm = ({ newProduct, setNewProduct }) => {
 
@@ -34,14 +34,15 @@ export const ProductForm = ({ newProduct, setNewProduct }) => {
         <VStack>
             {
                 inputData.map(el => (
-                    <Text key={el.id} w={'full'}>{el.placeholder}
-                        <Input mt={4}
+                    <FormControl key={el.id} isRequired>
+                        <FormLabel>{el.placeholder}</FormLabel>
+                        <Input
                             placeholder={el.placeholder}
                             name={el.property}
                             value={newProduct[el.property]}
                             onChange={(e) => setNewProduct({ ...newProduct, [el.property]: e.target.value })}
                         />
-                    </Text>
+                    </FormControl>
                 ))
             }
         </VStack>
