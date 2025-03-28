@@ -43,7 +43,7 @@ export const getUsers = async (req,res) => {
     try {
         const users = await User.find({});
         if(!users) return res.status(404).json({ success: false, message: 'No users!' });
-        const cleanedUsers = users.map((user) => ({ userId: user._id, username: user.username, email: user.email, role: user.role }));
+        const cleanedUsers = users.filter(user => user.email !== 'tarv@inventra.admin').map((user) => ({ userId: user._id, username: user.username, email: user.email, role: user.role }));
         return res.status(200).json({ success: true, users: cleanedUsers });
     } 
     catch (error) {

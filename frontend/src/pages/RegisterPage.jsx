@@ -2,44 +2,40 @@ import { useToast, Input, Text, Button, useColorMode, Flex, VStack, Container, F
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Theme } from "../store/colors";
+import { useAuthStore } from "../store/authStore";
 
 export const RegisterPage = () => {
+    const { colorMode } = useColorMode();
+    const signUp = useAuthStore((state) => state.register);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [username, setUsername] = useState("");
     const navigate = useNavigate();
-    const { colorMode } = useColorMode();
-
     const toast = useToast();
 
     const handleSignUp = async (e) => {
         e.preventDefault();
 
-        try {
-            const response = await fetch('/api/users/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, email, password })
+        const { success, message } = await signUp(username, email, password);
+        if (!success) {
+            toast({
+                title: "Error",
+                description: message,
+                status: "error",
+                isClosable: true
             });
-            const data = await response.json();
-            if (!data.success) {
-                toast({
-                    title: "Error",
-                    description: data.message,
-                    status: "error",
-                    isClosable: true
-                });
-                setEmail("");
-                setPassword("");
-                setUsername("");
-            }
-            else {
-                navigate('/login');
-            }
-        } catch (error) {
-            console.error(error);
+            setEmail("");
+            setPassword("");
+            setUsername("");
+        }
+        else {
+            toast({
+                title: "Success",
+                description: message,
+                status: "success",
+                isClosable: true
+            });
+            navigate('/login');
         }
     }
 
