@@ -17,8 +17,8 @@ export const useAuthStore = create((set, get) => ({
             if(!response.ok) {
                 const errorData = await response.json();
                 return { success: errorData.success, message: errorData.message }
-            }
-
+            };
+            
             const data = await response.json();
             set({ allUsers: data.users });
             return { success: data.success, message: data.message }
@@ -72,6 +72,29 @@ export const useAuthStore = create((set, get) => ({
             set({ allUsers: newUsers });
             return  { success: true, message: data.message };
         } 
+        catch (error) {
+            return { success: false, message: 'Server Error! Please try again later' }
+        }
+    },
+
+    register: async (username, email, password) => {
+        try {
+            const response = await fetch('/api/users/register', { 
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, email, password })
+            });
+    
+            if(!response.ok) {
+                const errorData = await response.json();
+                return { success: errorData.success, message: errorData.message }
+            }
+    
+            const data = await response.json();
+            return { success: data.success, message: data.message };
+        }
         catch (error) {
             return { success: false, message: 'Server Error! Please try again later' }
         }

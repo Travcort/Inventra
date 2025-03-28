@@ -1,14 +1,15 @@
-import { Container, Flex, Stack, Text, Button, useColorMode, useToast, RadioGroup, Radio, 
-Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, 
-useDisclosure} from "@chakra-ui/react";
+import { Container, Flex, Text, Button, Avatar, useToast, useDisclosure, useColorMode, Table, Thead, Tr, Td, Th, Tbody, TableContainer} from "@chakra-ui/react";
 import { EditIcon, DeleteIcon  } from '@chakra-ui/icons';
-import { Theme } from '../../store/colors.js';
+import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore.js";
 import { useEffect, useState } from "react";
+import { UserModal } from "../../components/admin/UserModal.jsx";
+import { Theme } from "../../store/colors.js";
 
 export const UsersPage = () => {
-    const { colorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const { colorMode } = useColorMode();
+    const navigate = useNavigate();
     const [selectedRole, setSelectedRole] = useState('');  
     const [selectedUser, setSelectedUser] = useState(''); 
     const [selectedOp, setSelectedOp] = useState('');
@@ -31,6 +32,9 @@ export const UsersPage = () => {
                         isClosable: true
                     });
                     onClose();
+                    if (message === "Access Token is expired! Please log in") {
+                        navigate('/login');
+                    }
                 }
             }
         )();
@@ -72,60 +76,42 @@ export const UsersPage = () => {
         <Container maxW={"container.sm"} py={12}>
             <Text my={5} fontSize={20} fontWeight={'bold'} textAlign={'center'}>Users Admin Dashboard</Text>
             <Flex flexDirection={'column'} margin={'auto'} gap={5}>
-                {
-                    filteredUsers
-                    .map((user) => (
-                        <Flex key={user.userId} maxW={{ base: 'sm', md: 'lg' }} borderRadius={10} bg={Theme[colorMode].inverseBackground} color={Theme[colorMode].black} alignItems={'center'} justifyContent={'space-between'}>
-                            <Text>{user.username}</Text>
-                            <Text>User ID</Text>
-                            <Text>{user.role}</Text>
-                            <Flex>
-                                <Button onClick={() => { setSelectedOp('update'); setSelectedRole(user.role); setSelectedUser(user.userId); onOpen() }} rightIcon={<EditIcon />} color={Theme[colorMode].black}>Role</Button>
-                                <Button onClick={() => { setSelectedOp('delete'); setSelectedUser(user.userId); onOpen() }} rightIcon={<DeleteIcon />} color={Theme[colorMode].black}>Delete</Button>
-                            </Flex>
-                        </Flex>
-                    ))
-                }
-                <Modal isOpen={isOpen} onClose={onClose}>
-                    <ModalOverlay />
-                    <ModalContent>
-                        <ModalHeader>{ selectedOp === 'update' ? 'Change User Role' : 'Delete User' }</ModalHeader>
-                        <ModalCloseButton />
-                        <ModalBody>
-                            {
-                                selectedOp === 'update'
-                                ? (
-                                    <RadioGroup onChange={setSelectedRole} value={selectedRole}>
-                                        <Stack direction="column">
-                                            <Radio value="admin">Admin</Radio>
-                                            <Radio value="stockist">Stockist</Radio>
-                                            <Radio value="user">User</Radio>
-                                        </Stack>
-                                    </RadioGroup>
-                                )
-                                : (
-                                    <Text>Are you sure you want to delete this user?</Text>
-                                )
-                            }
-                        </ModalBody>
-                        <ModalFooter>
-                            {
-                                selectedOp === 'update'
-                                ? (
-                                    <Button onClick={() => handleChangeRole()} colorScheme="blue" mr={3}>
-                                        Change Role 
-                                    </Button>
-                                )
-                                : (
-                                    <Button onClick={() => handleDeleteUser()} colorScheme="red" mr={3}>
-                                        Delete User
-                                    </Button>
-                                )
-                            }
-                            <Button onClick={onClose}>Cancel</Button>
-                        </ModalFooter>
-                    </ModalContent>
-                </Modal>
+                <TableContainer maxWidth={'100%'} margin={'auto'} borderRadius={10} bg={Theme[colorMode].inverseBackground}>
+                    <Table variant={'simple'} color={Theme[colorMode].inverseText}>
+                        <Thead>
+                            <Tr>
+                                <Th>User</Th>
+                                <Th>User Email</Th>
+                                <Th>User Role</Th>
+                                <Th>Actions</Th>
+                            </Tr>
+                        </Thead>
+                        <Tbody>
+                        {
+                            filteredUsers
+                            .map((user) => (
+                                <Tr key={user.userId}>
+                                    <Td>
+                                        <Flex alignItems={'center'} gap={3}>
+                                            <Avatar bg={Theme[colorMode].buttonBackground} color={Theme[colorMode].white} size={'md'} name={user?.username} />
+                                            {user.username}
+                                        </Flex>
+                                    </Td>
+                                    <Td>{user.email}</Td>
+                                    <Td>{user.role}</Td>
+                                    <Td>
+                                        <Flex flexDirection={{ base: 'column', md: 'row' }} gap={3}>
+                                            <Button onClick={() => { setSelectedOp('update'); setSelectedRole(user.role); setSelectedUser(user.userId); onOpen() }} rightIcon={<EditIcon />} color={Theme[colorMode].black}>Role</Button>
+                                            <Button onClick={() => { setSelectedOp('delete'); setSelectedUser(user.userId); onOpen() }} rightIcon={<DeleteIcon />} color={Theme[colorMode].black}>Delete</Button>
+                                        </Flex>
+                                    </Td>
+                                </Tr>
+                            ))
+                        }
+                        </Tbody>
+                    </Table>
+                </TableContainer>
+                <UserModal isOpen={isOpen} onClose={onClose} userSettings={{ selectedOp, selectedRole, setSelectedRole, handleChangeRole, handleDeleteUser }} />
             </Flex>
         </Container>
     );

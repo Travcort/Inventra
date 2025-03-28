@@ -9,7 +9,7 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <ChakraProvider>
         <App />
-      </ChakraProvider>,
+      </ChakraProvider>
     </BrowserRouter>
   </StrictMode>
 )
