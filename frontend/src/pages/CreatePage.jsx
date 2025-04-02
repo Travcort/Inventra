@@ -4,39 +4,43 @@ import { useProductStore } from "../store/productStore"
 import { Theme } from "../store/colors";
 import { ProductForm } from "../components/ProductForm";
 import { useAuthStore } from "../store/authStore";
+import { useNavigate } from "react-router-dom";
 
 const CreatePage = () => {
+    const toast = useToast();
+    const user = useAuthStore((state) => state.user);
+    const logoutUser = useAuthStore((state) => state.logout);
+    const navigate = useNavigate();
     const [ newProduct, setNewProduct ] = useState({
         name: "",
         price: "",
         description: "",
         stock: "",
         image: "",
-        createdBy: useAuthStore.getState().user.userId
+        createdBy: user?.userId
     });
 
+    const displayToast = (success, message) => {
+        if (message === "Access Token is expired! Please log in") {
+            logoutUser();
+            navigate('/login');
+        }
+        
+        toast({
+            title: success ? "Success" : "Error",
+            description: message,
+            status: success ? 'success' : 'error',
+            isClosable: true,
+        })
+    }
+
     const createProduct= useProductStore((state) => state.createProduct);
-    const toast = useToast();
 
     const handleAddProduct = async() => {
         const { success, message } = await createProduct(newProduct);
-        if (!success) {
-            toast({
-                title: "Error",
-                description: message,
-                status: "error",
-                isClosable: true
-            });
-        }
-        else {
-            toast({
-                title: "Success",
-                description: message,
-                status: "success",
-                isClosable: true
-            });
-        }
         setNewProduct({ name: "", price: "", description: "", stock: "", image: "" });
+        navigate('/');
+        displayToast(success, message);
     }
 
     return (

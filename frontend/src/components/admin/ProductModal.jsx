@@ -1,8 +1,8 @@
 import { Text, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from "@chakra-ui/react";
 import { ProductForm } from "../ProductForm";
 
-export const ProductModal = ({ isOpen, onClose, product, productSettings }) => {
-    const { selectedOp, updatedProduct, setUpdatedProduct, handleUpdateProduct, handleDeleteProduct, handleCancel } = productSettings;
+export const ProductModal = ({ isOpen, onClose, productSettings }) => {
+    const { selectedOp, product, updatedProduct, setUpdatedProduct, handleUpdateProduct, handleDeleteProduct, handleCancel } = productSettings;
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>

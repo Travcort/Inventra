@@ -60,15 +60,15 @@ export const AdminDashboard = () => {
         <Container maxW={"container.sm"} py={12}>
             <Text my={5} textAlign={'center'} fontSize={20} fontWeight={'bold'}>{greeting()}, {adminUser.username}</Text>
             <Flex height={100} width={{ base: 'xs', md: 'md' }} margin={'auto'} mb={5} borderRadius={10} bg={Theme[colorMode].inverseBackground} flexDirection={{ base: 'column', md: 'row' }} justifyContent={'center'} alignItems={'center'} gap={5}>
-                <Text color={'black'} fontSize={20} fontWeight={'bold'} textAlign={'center'}>Inventory Count: {productsCount.length}</Text>
-                <Text color={'black'} fontSize={20} fontWeight={'bold'} textAlign={'center'}>Inventory Worth: KES {productsCount.reduce((sum, el) => sum + el.price, 0)}</Text>
+                <Text color={Theme[colorMode].inverseText} fontSize={20} fontWeight={'bold'} textAlign={'center'}>Inventory Count: {productsCount.length}</Text>
+                <Text color={Theme[colorMode].inverseText} fontSize={20} fontWeight={'bold'} textAlign={'center'}>Inventory Worth: KES {productsCount.reduce((sum, el) => sum + el.price, 0)}</Text>
             </Flex>
-            <Flex flexDirection={{ base: 'column', md: 'row' }} gap={5}>
+            <Flex flexDirection={{ base: 'column', md: 'row' }} margin={'auto'} gap={5}>
                 {
                     dashboardOptions.map(el => (
                         <Link key={el.id} to={el.href}>
                             <Box maxW={'sm'} height={250} width={250} margin={'auto'} borderRadius={10} bg={Theme[colorMode].inverseBackground}>
-                                <Text color={'black'}>{el.name}</Text>
+                                <Text color={Theme[colorMode].inverseText} textAlign={'center'}>{el.name}</Text>
                             </Box>
                         </Link>
                     ))

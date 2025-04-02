@@ -1,4 +1,4 @@
-import { useToast, Input, Text, Button, useColorMode, Flex, VStack, Container, FormControl, FormLabel } from "@chakra-ui/react";
+import { Input, Text, Button, useColorMode, Flex, VStack, Container, FormControl, FormLabel } from "@chakra-ui/react";
 import { useState } from "react";
 import { useAuthStore } from "../store/authStore";
 import { Link, useNavigate } from "react-router-dom";
@@ -11,11 +11,8 @@ export const LoginPage = () => {
     const navigate = useNavigate();
     const { colorMode } = useColorMode();
 
-    const toast = useToast();
-
     const handleLogin = async (e) => {
         e.preventDefault();
-
         try {
             const response = await fetch('/api/users/login', {
                 method: 'POST',
@@ -25,13 +22,8 @@ export const LoginPage = () => {
                 body: JSON.stringify({ email, password })
             });
             const data = await response.json();
+
             if (!data.success) {
-                toast({
-                    title: "Error",
-                    description: data.message,
-                    status: "error",
-                    isClosable: true
-                });
                 if(data.message === "Invalid Password!") {
                     setPassword("");
                 }

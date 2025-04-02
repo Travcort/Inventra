@@ -1,65 +1,54 @@
 import { useState } from "react";
-import { Box, Heading, HStack, IconButton, Image, useDisclosure, Text, useToast, useColorMode, Flex, Container} from "@chakra-ui/react";
+import { Box, Heading, HStack, IconButton, Image, useDisclosure, Text, useColorMode, Flex, Container, useToast} from "@chakra-ui/react";
 import { EditIcon, DeleteIcon  } from '@chakra-ui/icons';
 import { Theme } from "../../store/colors";
 import { useProductStore } from "../../store/productStore";
 import { useAuthStore } from "../../store/authStore";
 import { ProductModal } from "./ProductModal";
+import { useNavigate } from "react-router-dom";
 
 export const AdminProductCard = ({ product }) => {
+    const toast = useToast();
+    const navigate = useNavigate();
     const [selectedOp, setSelectedOp] = useState('');
     const { colorMode } = useColorMode();
-    const toast = useToast();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [updatedProduct, setUpdatedProduct] = useState(product);
     const { deleteProduct, updateProduct } = useProductStore();
+    const user = useAuthStore((state) => state.user);
     const allUsers = useAuthStore((state) => state.allUsers);
+    const logoutUser = useAuthStore((state) => state.logout);
+
+    const displayToast = (success, message) => {
+        if (message === "Access Token is expired! Please log in") {
+            logoutUser();
+            navigate('/login');
+        }
+
+        toast({
+            title: success ? "Success" : "Error",
+            description: message,
+            status: success ? 'success' : 'error',
+            isClosable: true,
+        })
+    }
 
     const handleDeleteProduct = async (pid) => {
         const { success, message } = await deleteProduct(pid);
-        if(!success) {
-            toast({
-                title: "Error",
-                description: message,
-                status: 'error',
-                isClosable: true,
-            });
-        }
-        else {
-            toast({
-                title: "Success",
-                description: message,
-                status: 'success',
-                isClosable: true,
-            });
-        }
+        displayToast(success, message);
+        onClose();
     };
 
     const handleUpdateProduct = async (pid, updatedProduct) => {
         setUpdatedProduct((updatedProduct) => ({...updatedProduct, updatedBy: user?.userId}));
         const { success, message } = await updateProduct(pid, updatedProduct);
+        displayToast(success, message);
         onClose();
-        if(!success) {
-            toast({
-                title: "Error",
-                description: message,
-                status: 'error',
-                isClosable: true,
-            });
-        }
-        else {
-            toast({
-                title: "Success",
-                description: message,
-                status: 'success',
-                isClosable: true,
-            });
-        }
     }
 
     const handleCancel = () => {
-        onClose();
         setUpdatedProduct(product);
+        onClose();
     }
 
     return (
