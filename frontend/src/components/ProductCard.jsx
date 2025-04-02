@@ -11,14 +11,13 @@ import { StockForm } from "./StockForm";
 
 const ProductCard = ({ product }) => {
     const [updatedProduct, setUpdatedProduct] = useState(product);
+    const [selectedOp, setSelectedOp] = useState('');
     const { colorMode } = useColorMode();
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const toast = useToast();
 
     const user = useAuthStore((state) => state.user);
-
-    const { isOpen, onOpen, onClose } = useDisclosure();
-
     const { deleteProduct, updateProduct, updateStock } = useProductStore();
-    const toast = useToast();
     const handleDeleteProduct = async (pid) => {
         const { success, message } = await deleteProduct(pid);
         if(!success) {
@@ -99,8 +98,8 @@ const ProductCard = ({ product }) => {
                 <Text fontWeight={"semibold"} fontSize={"xl"} mb={4} color={Theme[colorMode].inverseText} >Stock: { product.stock }</Text>
                 {user?.role === 'admin' && (
                     <HStack spacing={2}>
-                        <IconButton icon={<EditIcon />} onClick={onOpen} colorScheme={"blue"} />
-                        <IconButton icon={<DeleteIcon />} onClick={() => handleDeleteProduct(product._id)} colorScheme={"red"} />
+                        <IconButton icon={<EditIcon />} onClick={() => { setSelectedOp('update'); onOpen() }} colorScheme={"blue"} />
+                        <IconButton icon={<DeleteIcon />} onClick={() => { setSelectedOp('delete'); onOpen() }} colorScheme={"red"} />
                     </HStack>
                 )}
 
@@ -114,7 +113,13 @@ const ProductCard = ({ product }) => {
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Update {user?.role === 'stockist' ? 'Stock' : 'Product'}</ModalHeader>
+                    <ModalHeader>
+                        {
+                            user?.role === 'stockist' 
+                            ? 'Update Stock' 
+                            : selectedOp === 'delete' ? 'Delete Product' : 'Update Product'
+                        }
+                    </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                         {user?.role === 'stockist' 
@@ -122,7 +127,7 @@ const ProductCard = ({ product }) => {
                             <StockForm newProduct={updatedProduct} setNewProduct={setUpdatedProduct} />
                         )
                         : (
-                            <ProductForm newProduct={updatedProduct} setNewProduct={setUpdatedProduct} />
+                            selectedOp === 'delete' ? <Text>Are you sure you want to delete this product? </Text> : <ProductForm newProduct={updatedProduct} setNewProduct={setUpdatedProduct} />
                         )}
                         
                     </ModalBody>
@@ -132,9 +137,9 @@ const ProductCard = ({ product }) => {
                             <Button mr={4} colorScheme={"blue"} onClick={() => handleUpdateStock(product._id, updatedProduct)}>Update</Button>
                         )
                         : (
-                            <Button mr={4} colorScheme={"blue"} onClick={() => handleUpdateProduct(product._id, updatedProduct)}>Update</Button>
+                            selectedOp === 'delete' ? <Button mr={4} colorScheme={"red"} onClick={() => handleDeleteProduct(product._id)}>Delete</Button> : <Button mr={4} colorScheme={"blue"} onClick={() => handleUpdateProduct(product._id, updatedProduct)}>Update</Button>
                         )}
-                        <Button colorScheme={"red"} onClick={handleCancel}>Cancel</Button>
+                        <Button onClick={handleCancel}>Cancel</Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>

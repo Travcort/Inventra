@@ -1,13 +1,40 @@
-import { Box, Container, Flex, Text, useColorMode } from "@chakra-ui/react";
+import { Box, Container, Flex, Text, useColorMode, useDisclosure, useToast } from "@chakra-ui/react";
 import { Theme } from "../../store/colors";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useProductStore } from "../../store/productStore";
 import { useAuthStore } from "../../store/authStore";
+import { useEffect } from "react";
 
 export const AdminDashboard = () => {
     const { colorMode } = useColorMode();
+    const { onClose } = useDisclosure();
     const productsCount = useProductStore((state) => state.products);
     const adminUser = useAuthStore((state) => state.user);
+    const logoutUser = useAuthStore((state) => state.logout);
+    const fetchUsers = useAuthStore((state) => state.fetchUsers);
+    const navigate = useNavigate();
+    const toast = useToast();
+
+    useEffect(() => {
+        (
+            async() => {
+                const { success, message } = await fetchUsers();
+                if(!success) {
+                    toast({
+                        title: "Error",
+                        description: message,
+                        status: "error",
+                        isClosable: true
+                    });
+                    onClose();
+                    if (message === "Access Token is expired! Please log in") {
+                        logoutUser();
+                        navigate('/login');
+                    }
+                }
+            }
+        )();
+    }, []);
 
     const dashboardOptions = [
         {

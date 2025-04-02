@@ -1,44 +1,21 @@
 import { Container, Flex, Text, Button, Avatar, useToast, useDisclosure, useColorMode, Table, Thead, Tr, Td, Th, Tbody, TableContainer} from "@chakra-ui/react";
 import { EditIcon, DeleteIcon  } from '@chakra-ui/icons';
-import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore.js";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { UserModal } from "../../components/admin/UserModal.jsx";
 import { Theme } from "../../store/colors.js";
 
 export const UsersPage = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { colorMode } = useColorMode();
-    const navigate = useNavigate();
     const [selectedRole, setSelectedRole] = useState('');  
     const [selectedUser, setSelectedUser] = useState(''); 
     const [selectedOp, setSelectedOp] = useState('');
     const toast = useToast();
     const currentUser = useAuthStore((state) => state.user);
-    const allUsers = useAuthStore((state) => state.allUsers);
-    const fetchUsers = useAuthStore((state) => state.fetchUsers);
+    const allUsers = useAuthStore((state) => state.allUsers);  
     const updateUserRole = useAuthStore((state) => state.changeUserRole);
     const deleteUser = useAuthStore((state) => state.deleteUser);
-
-    useEffect(() => {
-        (
-            async() => {
-                const { success, message } = await fetchUsers();
-                if(!success) {
-                    toast({
-                        title: "Error",
-                        description: message,
-                        status: "error",
-                        isClosable: true
-                    });
-                    onClose();
-                    if (message === "Access Token is expired! Please log in") {
-                        navigate('/login');
-                    }
-                }
-            }
-        )();
-    }, []);
 
     const displayToast = (success, message) => {
         if(!success) {
