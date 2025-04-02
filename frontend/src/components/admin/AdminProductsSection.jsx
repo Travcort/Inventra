@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import { Text, Flex, Spinner, SimpleGrid } from '@chakra-ui/react';
-import ProductCard from './ProductCard';
+import { Text, Spinner, SimpleGrid, Flex } from '@chakra-ui/react';
+import { AdminProductCard } from './AdminProductCard';
 
-export const ProductsSection = ({ isLoading, products }) => {
+export const AdminProductsSection = ({ isLoading, products }) => {
     return (
         isLoading 
         ? <Spinner margin={'auto'} speed='0.65s' thickness='2px' emptyColor='gray.200' color='purple.500' size='xl' /> 
@@ -20,7 +20,7 @@ export const ProductsSection = ({ isLoading, products }) => {
                 >
                     {
                         products.map((product) => (
-                            <ProductCard key={product._id} product={product} />
+                            <AdminProductCard key={product._id} product={product} />
                         ))
                     }
                 </SimpleGrid>
@@ -34,6 +34,6 @@ export const ProductsSection = ({ isLoading, products }) => {
                         </Link>
                     </Text>
                 </Flex>
-            )
+            )  
     );
 }

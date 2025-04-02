@@ -22,6 +22,7 @@ export const updateStock = async (req,res) => {
         res.status(404).json({ success: false, message: "Invalid Product ID" });
     }
 
+    if (isNaN(stock)) return res.status(400).json({ success: false, message: 'Price field should be a number' });
     if (!stock || !updatedBy) return res.status(400).json({ success: false, message: 'Undefined fields!' });
 
     try {
@@ -42,10 +43,11 @@ export const updateStock = async (req,res) => {
 export const createProduct = async (req,res) => {
     const { name, description, price, image, stock, createdBy } = req.body;
 
-    if(!name || !description || !price || !image || !stock || !createdBy) {
+    if(!name || !description || !price || !stock || !createdBy) {
         return res.status(400).json({ success: false, message: 'You have undefined properties in the body!' });
     }
 
+    if (isNaN(price)) return res.status(400).json({ success: false, message: 'Price field should be a number' });
     if (isNaN(stock)) return res.status(400).json({ success: false, message: 'Stock field should be a number' });
 
     const newProduct = new Product({ name, description, price, image, stock, createdBy, updatedBy: createdBy });
@@ -68,10 +70,11 @@ export const updateProduct =  async (req,res) => {
         return res.status(400).json({ success: false, message: "Invalid Product ID!" });
     }
 
-    if(!name || !price || !description || !image || !stock || !updatedBy) {
+    if(!name || !price || !description || !stock || !updatedBy) {
         return res.status(400).json({ success: false, message: 'You have undefined properties in the body!' });
     }
 
+    if (isNaN(price)) return res.status(400).json({ success: false, message: 'Price field should be a number' });
     if (isNaN(stock)) return res.status(400).json({ success: false, message: 'Stock field should be a number!' });
 
     let productToUpdate = await Product.findById(id);
